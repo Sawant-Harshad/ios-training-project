@@ -1,23 +1,25 @@
 //
 //  ContentView.swift
-//  ios-training-project
-//
-//  Created by Harshad Sawant on 25/11/24.
 //
 
 import SwiftUI
 
 struct ContentView: View {
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-            Divider()
-            SampleView()
+        
+        NavigationView{
+            VStack{
+                Text("Header")
+                Text("Buttons Panel")
+                TimeOffTableView()
+                    .padding(5)
+            }
+            .background(Color(#colorLiteral(red: 0.9691057801, green: 0.9609417319, blue: 1, alpha: 1)))
         }
-        .padding()
+        .background(Color.clear)
+        .navigationBarHidden(true)
+        
     }
 }
 
