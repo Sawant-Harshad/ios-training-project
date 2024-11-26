@@ -12,9 +12,12 @@ struct DummyDetailView: View {
                 .font(.largeTitle)
                 .padding()
             Text(timeOffDetail.timeOffId)
+                .padding()
             Text(timeOffDetail.startDate)
             Text(timeOffDetail.endDate)
+                .padding()
             Text(timeOffDetail.type)
+                .padding()
             CheckBoxView(isChecked: timeOffDetail.isHalfDay)
             
         }
