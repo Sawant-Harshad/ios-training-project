@@ -6,7 +6,7 @@ import SwiftUI
 
 struct CheckBoxView: View {
     
-    @State var isChecked: Bool = false
+    @Binding var isChecked: Bool
     
     var body: some View {
         Toggle(isOn: $isChecked){
@@ -38,5 +38,5 @@ struct CheckBoxToggleStyle: ToggleStyle{
 }
 
 #Preview {
-    CheckBoxView(isChecked: true)
+    CheckBoxView(isChecked: .constant(true))
 }

@@ -4,14 +4,22 @@
 
 import Foundation
 
-struct TimeOffData : Identifiable{
+class TimeOffData : Identifiable , ObservableObject{
     
     let id = UUID()
     let timeOffId: String
     let startDate: String
     let endDate: String
     let type: String
-    let isHalfDay: Bool
+    var isHalfDay: Bool
+    
+    init(timeOffId: String, startDate: String, endDate: String, type: String, isHalfDay: Bool = false) {
+        self.timeOffId = timeOffId
+        self.startDate = startDate
+        self.endDate = endDate
+        self.type = type
+        self.isHalfDay = isHalfDay
+    }
     
 }
 

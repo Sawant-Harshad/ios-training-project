@@ -15,7 +15,7 @@ struct TimeOffTableView: View {
             TableHeaderView()
                 .padding(.vertical,0)
             
-            List(viewModel.tableData,id:\.self.id){ item in
+            List($viewModel.tableData,id:\.self.id){ $item in
                 
                 HStack(alignment: .top){
                     
@@ -44,7 +44,7 @@ struct TimeOffTableView: View {
                         Text(item.type)
                             .padding(.horizontal)
                         HStack{
-                            CheckBoxView(isChecked: item.isHalfDay)
+                            CheckBoxView(isChecked: $item.isHalfDay)
                         }
                         .padding(.horizontal)
                     }

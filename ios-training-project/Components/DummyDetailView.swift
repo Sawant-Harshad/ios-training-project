@@ -18,7 +18,7 @@ struct DummyDetailView: View {
                 .padding()
             Text(timeOffDetail.type)
                 .padding()
-            CheckBoxView(isChecked: timeOffDetail.isHalfDay)
+            CheckBoxView(isChecked: $timeOffDetail.isHalfDay)
             
         }
     }
