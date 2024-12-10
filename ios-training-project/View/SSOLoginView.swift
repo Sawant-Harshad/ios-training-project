@@ -8,39 +8,56 @@
 import SwiftUI
 
 struct SSOLoginView: View {
+    @State private var navigationPath = NavigationPath()
+    @State private var isLoggedIn = false
     var body: some View {
-        VStack(spacing: 20) {
-            // logo
-            Image("logoBtsavvy")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 100, height: 120)
-                .padding(.vertical,32)
-            
-            // title
-            Text("Welcome")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-                .foregroundColor(.blue)
-            
-          
-            
-            
-            Spacer()
-            
-            // SSO Buttons
-            VStack(spacing: 15) {
+        NavigationStack {
+            VStack(spacing: 20) {
+                // logo
+                Image("logoBtsavvy")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 120)
+                    .padding(.vertical,32)
                 
-                SSOButton(provider: "Sign in with Salesforce", color: .red)
+                // title
+                Text("Welcome")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                    .foregroundColor(.blue)
+                
+                
+                
+                
+                Spacer()
+                
+                // SSO Buttons
+                VStack(spacing: 15) {
+                    
+                    NavigationLink(destination: LoginView()  .navigationBarBackButtonHidden(true),isActive: $isLoggedIn){
+                        EmptyView()
+                        
+                        SSOButton(
+                            provider: {
+                                isLoggedIn = true
+                            },
+                            color: .red,
+                            logo: "Salesforcelogo",
+                            text: "Sign in with Salesforce"
+                        )
+                    }
+                    .padding(.horizontal)
+                    
+                }
+                
+                Spacer()
             }
-            .padding(.horizontal)
+            .padding()
+            .background(.black)
             
-            Spacer()
         }
-        .padding()
-        .background(.black)
     }
 }
 

@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct SSOButton: View {
-    var provider: String
+    var provider:()->Void
     var color: Color
+    var logo: String
+    var text: String
 
     
     var body: some View {
-        Button(action: {
-            // Handle SSO login action
-            print(provider)
-        }) {
+        Button(action: provider){
             HStack {
-                Image("Salesforcelogo")
+                Image(logo)
                     .resizable()
                     .scaledToFill()
                     .foregroundColor(.white)
                     .frame(width: 30, height: 30)
                 
                 
-                Text(provider)
+                Text(text)
                     .font(.headline)
                     .foregroundColor(.white)
                 

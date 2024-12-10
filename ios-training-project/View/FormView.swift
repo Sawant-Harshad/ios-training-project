@@ -10,6 +10,7 @@ import SwiftUI
 struct FormView: View {
     @State private var timeOffRequest = TimeOffRequest()
     let timeOffTypes = ["Paid Time Off", "Unpaid Time Off", "Sick Leave"]
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
@@ -20,7 +21,9 @@ struct FormView: View {
                     Image(systemName: "arrow.left")
                         .frame(alignment: .leading)
                         .onTapGesture {
-                            //back to home
+                            print("Back")
+                            dismiss()
+                            
                         }
                     
                     Text("New Time Off Request")
@@ -53,8 +56,9 @@ struct FormView: View {
                                         )
                         
                         // holiday field
-                        InputFormView(text: $timeOffRequest.holidayName, title: "HolidayName", placeholder: "Enter holiday name")
-                            .autocapitalization(.none)
+                        InputFormView(text: $timeOffRequest.holidayName, title: "Description", placeholder: "Enter Description")
+                            
+                            
                         
                         //date field
                         HStack(spacing: 16) {

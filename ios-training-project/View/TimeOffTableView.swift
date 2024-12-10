@@ -7,10 +7,20 @@ import SwiftUI
 struct TimeOffTableView: View {
     
     @ObservedObject var viewModel = TimeOffTableViewModel()
+    @State private var isLoggedIn = false
     
     var body: some View {
         
-        VStack{
+        
+        NavigationStack{
+            NavigationLink(destination: FormView()  .navigationBarBackButtonHidden(true),isActive: $isLoggedIn){
+                EmptyView()
+                
+                CustomButton(title: "New Time off", action: {isLoggedIn=true}, backgroundColor: .purple)
+                    .padding()
+            }
+            .padding(.horizontal)
+           
             
             TableHeaderView()
                 .padding(.vertical,0)
