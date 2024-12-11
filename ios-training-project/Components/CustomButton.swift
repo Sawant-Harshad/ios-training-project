@@ -9,22 +9,23 @@ import SwiftUI
 
 struct CustomButton: View {
     let title: String
-        let action: () -> Void
-        let backgroundColor: Color
-        let textColor: Color = .white
-
-        var body: some View {
-            Button(action: action) {
-                Text(title)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(backgroundColor)
-                    .foregroundColor(textColor)
-                    .cornerRadius(50)
-            }
+    let action: () -> Void
+    let backgroundColor: Color
+    let textColor: Color = .white
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal,5)
+                .padding(.vertical)
+                .background(backgroundColor)
+                .foregroundColor(textColor)
+                .cornerRadius(50)
         }
+    }
 }
 
-//#Preview {
-//    CustomButton()
-//}
+#Preview {
+    CustomButton(title: "Sample", action: {}, backgroundColor: .purple)
+}

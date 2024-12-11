@@ -8,6 +8,7 @@ struct TimeOffTableView: View {
     
     @ObservedObject var viewModel = TimeOffTableViewModel()
     @State private var isLoggedIn = false
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         
@@ -16,11 +17,34 @@ struct TimeOffTableView: View {
             NavigationLink(destination: FormView()  .navigationBarBackButtonHidden(true),isActive: $isLoggedIn){
                 EmptyView()
                 
-                CustomButton(title: "New Time off", action: {isLoggedIn=true}, backgroundColor: .purple)
-                    .padding()
+                HStack(spacing: 80){
+                    CustomButton(
+                        title: "New Time off",
+                        action: {
+                            isLoggedIn = true
+                        },
+                        backgroundColor: .purple
+                    )
+                    .padding(.vertical)
+                    .frame(width: .infinity)
+                    
+                    //                    Spacer()
+                    
+                    CustomButton(
+                        title: "Sign Out",
+                        action: {
+                            dismiss()
+                        },
+                        backgroundColor: .secondary
+                    )
+                    .padding(.vertical)
+                    .frame(width: .infinity)
+                }
+                
             }
+            
             .padding(.horizontal)
-           
+            
             
             TableHeaderView()
                 .padding(.vertical,0)
@@ -74,12 +98,12 @@ struct TimeOffTableView: View {
             .background(Color.clear)
             .listRowInsets(EdgeInsets())
             .padding(0)
+            
         }
-        //        .onAppear {
-        //            viewModel.methodToFetchTimeOffData
-        //        }
+        .navigationBarBackButtonHidden(true)
         
     }
+    
 }
 
 #Preview {

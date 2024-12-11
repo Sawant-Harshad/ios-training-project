@@ -68,6 +68,7 @@ struct DummyDetailView: View {
                 
                 Spacer()
             }
+            .navigationBarBackButtonHidden(true)
         }
     }
 }

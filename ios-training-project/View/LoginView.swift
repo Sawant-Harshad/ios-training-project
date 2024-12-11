@@ -70,13 +70,13 @@ struct LoginView: View {
                         Alert(title: Text("Login Failed"), message: Text("Invalid username or password."), dismissButton: .default(Text("OK")))
                     }
                 
-                // Remember Me Toggle
-                Toggle(isOn: $timeOffRequest.isHalfDay) {
-                    Text("Remember me")
-                        .foregroundColor(.black)
-                    Spacer()
-                }
-                .toggleStyle(CheckBox())
+//                // Remember Me Toggle
+//                Toggle(isOn: $timeOffRequest.isHalfDay) {
+//                    Text("Remember me")
+//                        .foregroundColor(.black)
+//                    Spacer()
+//                }
+//                .toggleStyle(CheckBox())
             }
             .padding(.horizontal)
             .padding(.bottom, 14)
