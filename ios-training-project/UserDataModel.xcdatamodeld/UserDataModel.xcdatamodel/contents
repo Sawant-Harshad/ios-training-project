@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Attachment" representedClassName=".Attachment" syncable="YES" codeGenerationType="class">
+        <attribute name="fileName" attributeType="String"/>
+        <attribute name="fileType" attributeType="String"/>
+        <attribute name="fileUploadDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fileUrl" attributeType="String"/>
+        <relationship name="timeOff" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TimeOff" inverseName="attachments" inverseEntity="TimeOff"/>
+    </entity>
+    <entity name="TimeOff" representedClassName=".TimeOff" syncable="YES" codeGenerationType="class">
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="holidayName" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isHalfDay" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="timeOffType" attributeType="String"/>
+        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Attachment" inverseName="timeOff" inverseEntity="Attachment"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="userTimeOffList" inverseEntity="User"/>
+    </entity>
+    <entity name="User" representedClassName=".User" syncable="YES" codeGenerationType="class">
+        <attribute name="email" attributeType="String"/>
+        <attribute name="password" attributeType="String"/>
+        <attribute name="username" attributeType="String"/>
+        <relationship name="userTimeOffList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TimeOff" inverseName="user" inverseEntity="TimeOff"/>
+    </entity>
+</model>

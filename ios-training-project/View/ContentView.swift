@@ -6,22 +6,21 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @State private var isLoggedIn: Bool = false
+    @State private var currentUser: User? = nil // Store the current logged-in user
+    
     var body: some View {
         
-        SSOLoginView()
+        NavigationStack {
+            if isLoggedIn, let user = currentUser {
+                // HomeView is displayed when logged in
+                HomeView(user: user, isLoggedIn: $isLoggedIn)
+            } else {
+                // LoginView is displayed when not logged in
+                LoginView(isLoggedIn: $isLoggedIn, currentUser: $currentUser)
+            }
+        }
 
-
-//        NavigationView{
-//            VStack{
-//                Text("Header")
-//                Text("Buttons Panel")
-//                TimeOffTableView()
-//                    .padding(5)
-//            }
-//            .background(Color(#colorLiteral(red: 0.9691057801, green: 0.9609417319, blue: 1, alpha: 1)))
-//        }
-//        .background(Color.clear)
-//        .navigationBarHidden(true)
         
     }
 }

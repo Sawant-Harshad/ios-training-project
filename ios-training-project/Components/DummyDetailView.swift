@@ -1,41 +1,28 @@
-// DetailView.swift
+//
+//  DummyDetailView.swift
+//  ios-training-project
+//
+//  Created by Harshad Sawant on 12/12/24.
+//
 
 import SwiftUI
-
-//struct DummyDetailView: View {
-//    
-//    @State var timeOffDetail: TimeOffData
-//    
-//    var body: some View {
-//        VStack {
-//            Text("Time Off Details")
-//                .font(.largeTitle)
-//                .padding()
-//            Text(timeOffDetail.timeOffId)
-//                .padding()
-//            Text(timeOffDetail.startDate)
-//            Text(timeOffDetail.endDate)
-//                .padding()
-//            Text(timeOffDetail.type)
-//                .padding()
-//            CheckBoxView(isChecked: $timeOffDetail.isHalfDay)
-//            
-//        }
-//    }
-//}
+import CoreData
 
 struct DummyDetailView: View {
-    @State var timeOffDetail: TimeOffData
-    @Environment(\.dismiss) var dismiss
+    
+    var timeOffDetail: String
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 9) {
                 // Header
                 HStack {
                     Image(systemName: "arrow.left")
                         .frame(alignment: .leading)
-                        .onTapGesture { dismiss() }
+                        .onTapGesture {
+                            dismiss()
+                        }
                     
                     Text("Time Off Request Details")
                         .font(.headline)
@@ -49,20 +36,20 @@ struct DummyDetailView: View {
                 
                 // Form
                 VStack(spacing: 20) {
-                    InputFormView(text: .constant(timeOffDetail.timeOffId), title: "Request ID", placeholder: "")
+                    InputFormView(text: .constant(timeOffDetail), title: "Request ID", placeholder: "")
                         .disabled(true)
                     
-                    InputFormView(text: .constant(timeOffDetail.startDate), title: "Start Date", placeholder: "")
-                        .disabled(true)
-                    
-                    InputFormView(text: .constant(timeOffDetail.endDate), title: "End Date", placeholder: "")
-                        .disabled(true)
-                    
-                    InputFormView(text: .constant(timeOffDetail.type), title: "Type", placeholder: "")
-                        .disabled(true)
-                    
-                    Toggle("Half Day", isOn: .constant(timeOffDetail.isHalfDay))
-                        .disabled(true)
+//                    InputFormView(text: .constant(timeOffDetail.startDate), title: "Start Date", placeholder: "")
+//                        .disabled(true)
+//
+//                    InputFormView(text: .constant(timeOffDetail.endDate), title: "End Date", placeholder: "")
+//                        .disabled(true)
+//
+//                    InputFormView(text: .constant(timeOffDetail.timeOffType), title: "Type", placeholder: "")
+//                        .disabled(true)
+//
+//                    Toggle("Half Day", isOn: .constant(timeOffDetail.isHalfDay))
+//                        .disabled(true)
                 }
                 .padding()
                 
@@ -73,9 +60,6 @@ struct DummyDetailView: View {
     }
 }
 
-
-#Preview{
-    var timeOff = sampleData.randomElement()
-    DummyDetailView(timeOffDetail: timeOff!)
-    //    DummyTestView()
+#Preview {
+    DummyDetailView(timeOffDetail: "Time Off Detail")
 }

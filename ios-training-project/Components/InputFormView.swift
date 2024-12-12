@@ -2,7 +2,7 @@
 //  InputFormView.swift
 //  SalesforceDemo
 //
-//  Created by Ankit Kishor on 13/11/24.
+//  Modified by Harshad Sawant on 13/12/24.
 //
 
 import SwiftUI
@@ -22,7 +22,8 @@ struct InputFormView: View {
                    
                    TextField(placeholder, text: $text)
                        .font(.system(size: 14))
-                       .padding(12) 
+                       .padding(12)
+                       .autocapitalization(.none)
                        .overlay(
                         RoundedRectangle(cornerRadius: 50)
                             .stroke(Color.gray, lineWidth: 1)

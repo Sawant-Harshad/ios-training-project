@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct SSOLoginView: View {
-    @State private var navigationPath = NavigationPath()
-    @State private var isLoggedIn = false
+    
+    @Binding var isLoggedIn: Bool
+    @Binding var currentUser: User?
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
@@ -36,7 +38,13 @@ struct SSOLoginView: View {
                 // SSO Buttons
                 VStack(spacing: 15) {
                     
-                    NavigationLink(destination: LoginView()  .navigationBarBackButtonHidden(true),isActive: $isLoggedIn){
+                    NavigationLink(
+                        destination: LoginView(
+                            isLoggedIn: $isLoggedIn,
+                            currentUser: $currentUser
+                        ).navigationBarBackButtonHidden(true),
+                        isActive: $isLoggedIn
+                    ){
                         EmptyView()
                         
                         SSOButton(
@@ -62,5 +70,9 @@ struct SSOLoginView: View {
 }
 
 #Preview {
-    SSOLoginView()
+    SSOLoginView(
+        isLoggedIn: .constant(true),
+        currentUser: .constant(PersistenceController.preview.fetchUsers().first)
+    )
+    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

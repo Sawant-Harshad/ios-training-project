@@ -6,11 +6,28 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
+
 
 struct FormView: View {
-    @State private var timeOffRequest = TimeOffRequest()
-    let timeOffTypes = ["Paid Time Off", "Unpaid Time Off", "Sick Leave"]
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
+    let persistenceController = PersistenceController.shared
+    
+    let timeOffTypes: [String] = TimeOffType.allCases.map{ $0.rawValue }
+    
+    var user: User
+    @State private var timeOffType: String = TimeOffType.paid.rawValue
+    @State private var holidayName: String = ""
+    @State private var startDate: Date = Date()
+    @State private var endDate: Date = Date()
+    @State private var isHalfDay: Bool = false
+    
+    @State private var isFileImporterPresented = false
+    @State private var attachments: [Attachment] = []
+    
+    @State private var errorMessage:String = ""
+    @State private var showError: Bool = false
     
     var body: some View {
         NavigationView {
@@ -44,31 +61,35 @@ struct FormView: View {
                 VStack( spacing: 20) {
                     // person field (non-editable have to make)
                     VStack(spacing: 15){
-                        InputFormView(text: $timeOffRequest.username, title: "Person", placeholder: "Ankit Kishor")
-                            .autocapitalization(.none)
+                        //                        InputFormView(text: user.username, title: "Person", placeholder: "User name")
+                        //                            .autocapitalization(.none)
                         
+                        Text(user.username ?? "User name")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                            
                         
                         // timeOff field
                         TimeOffTypePicker(
                             title: "Time Off Type",
                             options:timeOffTypes,
-                            selectedOption: $timeOffRequest.selectedTimeOffType
+                            selectedOption: $timeOffType
                         )
                         
                         // holiday field
-                        InputFormView(text: $timeOffRequest.holidayName, title: "Description", placeholder: "Enter Description")
+                        InputFormView(text: $holidayName, title: "Holiday Name", placeholder: "Holiday Name")
                         
                         
                         
                         //date field
                         HStack(spacing: 16) {
-                            DateField(label: "Start Date", selectedDate: $timeOffRequest.startDate)
+                            DateField(label: "Start Date", selectedDate: $startDate)
                             Spacer()
-                            DateField(label: "End Date", selectedDate: $timeOffRequest.endDate)
+                            DateField(label: "End Date", selectedDate: $endDate)
                         }
                         
                         // halfDay checkbox
-                        Toggle(isOn:$timeOffRequest.isHalfDay){
+                        Toggle(isOn:$isHalfDay){
                             Text("Half Day")
                                 .foregroundColor(.black)
                             Spacer()
@@ -82,17 +103,20 @@ struct FormView: View {
                 
                 //form end here...remember
                 
+                //=--------------------------------------
+                
                 Divider()
                     .background(Color.black)
                     .padding(.horizontal)
-                //=--------------------------------------
+                
+                //=---- File Upload --------------------
                 
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Notes & Attachments")
                         .font(.subheadline)
                     
                     Button(action: {
-                        timeOffRequest.showFilePicker.toggle()
+                        isFileImporterPresented.toggle()
                     }) {
                         VStack {
                             Image(systemName: "icloud.and.arrow.up")
@@ -111,44 +135,96 @@ struct FormView: View {
                         .background(Color(UIColor.systemGray6))
                         .cornerRadius(8)
                     }
-                    if let selectedFile = timeOffRequest.selectedFile {
-                        Text("Selected File: \(selectedFile.lastPathComponent)")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
+                    
+                    //                    if let selectedFile = timeOffRequest.selectedFile {
+                    //                        Text("Selected File: \(selectedFile.lastPathComponent)")
+                    //                            .font(.footnote)
+                    //                            .foregroundColor(.gray)
+                    //                    }
+                    
+                    ForEach(attachments, id: \.fileUrl) { fileData in
+                        Text(fileData.fileName ?? "Unknown file")
                     }
+                    
                 }
                 .padding()
                 
                 
                 // Action Buttons
                 HStack(spacing: 16) {
-                    CustomButton(title: "Cancel", action: {}, backgroundColor: .purple)
+                    CustomButton(title: "Cancel", action: {
+                        dismiss()
+                    }, backgroundColor: .purple)
                     CustomButton(title: "Save & New", action: {}, backgroundColor: .purple)
                     
-                    CustomButton(title: "Save", action: {}, backgroundColor: .purple)
+                    CustomButton(title: "Save", action: {
+                        saveData()
+                    }, backgroundColor: .purple)
                 }
                 .minimumScaleFactor(0.8)
                 .lineLimit(1)
                 .padding()
                 
             }
-            .fileImporter(isPresented: $timeOffRequest.showFilePicker, allowedContentTypes: [.pdf, .image]) { result in
+            .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: [.pdf, .image]) { result in
                 switch result {
                 case .success(let url):
-                    timeOffRequest.selectedFile = url
+                    addAttachment(url: url)
                 case .failure(let error):
-                    timeOffRequest.errorMessage = error.localizedDescription
-                    timeOffRequest.showError = true
+                    errorMessage = error.localizedDescription
+                    showError = true
                 }
+                isFileImporterPresented = false
             }
-            .alert(isPresented: $timeOffRequest.showError) {
-                Alert(title: Text("Error"), message: Text(timeOffRequest.errorMessage), dismissButton: .default(Text("OK")))
+            .alert(isPresented: $showError) {
+                Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
+    
+    //=----------------------------------------------------------------------
+    private func addAttachment(url: URL) {
+        let newFileData = Attachment(context: viewContext)
+        newFileData.fileUrl = url.absoluteString  // Store URL as a string
+        newFileData.fileName = url.lastPathComponent
+        newFileData.fileType = UTType(url.absoluteString)?.identifier ?? "Unknown type"
+        attachments.append(newFileData)
+    }
+    
+    
+    private func saveData() {
+        let context = viewContext
+        let newData = TimeOff(context: context)
+        newData.id = UUID()
+        newData.timeOffType = timeOffType
+        newData.holidayName = holidayName
+        newData.startDate = startDate
+        newData.endDate = endDate
+        newData.isHalfDay = isHalfDay
+        newData.creationDate = Date()
+        newData.user = user
+        newData.addToAttachments(NSSet(array: attachments))
+        
+        // Save to Core Data
+        do{
+            try context.save()
+        }catch{
+            print("Error saving data : \(error.localizedDescription)")
+        }
+        
+        // Dismiss the AddDataView and return to the HomeView
+        dismiss()
+    }
+    
 }
 
+
 #Preview {
-    FormView()
+    // Create a mock user object for preview purposes
+    let user = User(context: PersistenceController.shared.container.viewContext)
+    user.email = "abc@email.com"
+    user.password = "abc123"
+    
+    return FormView(user: user)
 }
