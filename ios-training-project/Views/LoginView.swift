@@ -121,6 +121,7 @@ struct LoginView: View {
         }
         // If user is validated, set currentUser and isLoggedIn to true
         let userData = UserSession(userEmail: user.email ?? "abc@email.com", userPassword: user.password ?? "abc123", userUserName: user.username ?? "Abc")
+        
         UserSession.saveToDefaults(userData: userData)
         isLoggedIn = true
         dismiss()

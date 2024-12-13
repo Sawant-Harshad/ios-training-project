@@ -101,16 +101,17 @@ struct HomeView: View {
             .onAppear {
                 if let userData = UserSession.loadFromDefaults() {
                     //                    self.userData = userData
-                    print("Home View : \(userData.userEmail)")
+                    //                    print("Home View : \(userData.userEmail)")
                     
                     // Create a mock User and MyData for the preview
                     let context = PersistenceController.shared.container.viewContext
                     
-                    // Create and save User
+                    // Create and User
                     let user = User(context: context)
                     user.email = userData.userEmail
                     user.password = userData.userPassword
                     user.username = userData.userUserName
+                    
                     
                     // Fetch the data for the current user
                     timeOffDataList = persistenceController.fetchData(for: user)

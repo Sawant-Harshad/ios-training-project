@@ -113,7 +113,9 @@ class PersistenceController {
             if let user1 = users.first(where: { $0.email == "harshad.sawant@example.com" }) {
                 // If user1 exists, add dummy DataItems
                 print("Found existing \(user1.email!)")
-                addDummyDataItems(for: user1)
+                //                addDummyDataItems(for: user1)
+                //                save()
+                let dataList = fetchData(for: user1)
                 
             } else {
                 // Create new user and add dummy data if it doesn't exist
@@ -168,7 +170,7 @@ class PersistenceController {
         data2.creationDate = Date().addingTimeInterval(-60*60*24)
         data2.user = user
         
-        print("Data 2: \(data1.id ?? UUID()) - \(data1.holidayName ?? "Holiday Name")")
+        print("Data 2: \(data2.id ?? UUID()) - \(data2.holidayName ?? "Holiday Name")")
         
         do {
             try context.save()
@@ -199,12 +201,13 @@ class PersistenceController {
     func fetchData(for user: User) -> [TimeOff] {
         let context = container.viewContext
         let request: NSFetchRequest<TimeOff> = TimeOff.fetchRequest()
-        request.predicate = NSPredicate(format: "user == %@", user)
+        
+        request.predicate = NSPredicate(format: "user.email == %@", user.email!)
         
         do {
             let dataItems = try context.fetch(request)
             print("Fetched \(dataItems.count) data items for user \(user.email ?? "abc@email.com") .") // Log fetched data
-            dataItems.forEach{timeOff in
+            dataItems.forEach{ timeOff in
                 print("\(timeOff.holidayName!) - Attachments: \(timeOff.attachments!.count)")
             }
             return dataItems

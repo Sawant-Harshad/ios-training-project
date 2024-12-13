@@ -14,7 +14,7 @@ struct UserSession {
     
     // You can define a method to save UserData to UserDefaults
     static func saveToDefaults(userData: UserSession) {
-        UserDefaults.standard.set(userData.userEmail, forKey: "userID")
+        UserDefaults.standard.set(userData.userEmail, forKey: "userEmail")
         UserDefaults.standard.set(userData.userPassword, forKey: "userPassword")
         UserDefaults.standard.set(userData.userUserName, forKey: "userUserName")
         print("Logged in user : \(userData.userEmail) - \(userData.userUserName)")
