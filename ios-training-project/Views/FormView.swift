@@ -16,7 +16,8 @@ struct FormView: View {
     
     let timeOffTypes: [String] = TimeOffType.allCases.map{ $0.rawValue }
     
-    var user: User
+    @State private var userData: UserSession? = nil
+    
     @State private var timeOffType: String = TimeOffType.paid.rawValue
     @State private var holidayName: String = ""
     @State private var startDate: Date = Date()
@@ -64,10 +65,10 @@ struct FormView: View {
                         //                        InputFormView(text: user.username, title: "Person", placeholder: "User name")
                         //                            .autocapitalization(.none)
                         
-                        Text(user.username ?? "User name")
+                        Text(userData?.userUserName ?? "User name")
                             .font(.headline)
                             .foregroundColor(.blue)
-                            
+                        
                         
                         // timeOff field
                         TimeOffTypePicker(
@@ -158,7 +159,7 @@ struct FormView: View {
                     CustomButton(title: "Save & New", action: {}, backgroundColor: .purple)
                     
                     CustomButton(title: "Save", action: {
-                        saveData()
+                        saveData(user: userData!)
                     }, backgroundColor: .purple)
                 }
                 .minimumScaleFactor(0.8)
@@ -181,6 +182,11 @@ struct FormView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear(){
+            if let userData = UserSession.loadFromDefaults() {
+                self.userData = userData
+            }
+        }
     }
     
     //=----------------------------------------------------------------------
@@ -193,8 +199,14 @@ struct FormView: View {
     }
     
     
-    private func saveData() {
+    private func saveData(user: UserSession) {
         let context = viewContext
+        
+        let user = User(context: context)
+        user.email = userData?.userEmail ?? "abc@email.com"
+        user.password = userData?.userPassword ?? "abc123"
+        user.username = userData?.userUserName ?? "Abc"
+        
         let newData = TimeOff(context: context)
         newData.id = UUID()
         newData.timeOffType = timeOffType
@@ -221,10 +233,5 @@ struct FormView: View {
 
 
 #Preview {
-    // Create a mock user object for preview purposes
-    let user = User(context: PersistenceController.shared.container.viewContext)
-    user.email = "abc@email.com"
-    user.password = "abc123"
-    
-    return FormView(user: user)
+    FormView()
 }

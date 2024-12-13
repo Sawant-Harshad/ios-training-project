@@ -6,12 +6,10 @@ import SwiftUI
 
 struct HomeView: View {
     
-    var user: User
-    @Binding var isLoggedIn: Bool // Binding to manage the login state
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
     
     @State private var timeOffDataList: [TimeOff] = []
     let persistenceController = PersistenceController.shared
-    
     
     var body: some View {
         
@@ -19,7 +17,7 @@ struct HomeView: View {
         NavigationStack{
             
             NavigationLink(
-                destination: FormView(user: user).navigationBarBackButtonHidden(true),
+                destination: FormView().navigationBarBackButtonHidden(true),
                 isActive: $isLoggedIn
             ){
                 EmptyView()
@@ -34,7 +32,7 @@ struct HomeView: View {
                         backgroundColor: .purple
                     )
                     .padding(.vertical)
-                    .frame(width: .infinity)
+                    .frame(maxWidth: .infinity)
                     
                     //                    Spacer()
                     
@@ -46,7 +44,7 @@ struct HomeView: View {
                         backgroundColor: .secondary
                     )
                     .padding(.vertical)
-                    .frame(width: .infinity)
+                    .frame(maxWidth: .infinity)
                     
                 }
                 
@@ -101,8 +99,23 @@ struct HomeView: View {
                 .cornerRadius(10)
             }
             .onAppear {
-                // Fetch the data for the current user
-                timeOffDataList = persistenceController.fetchData(for: user)
+                if let userData = UserSession.loadFromDefaults() {
+                    //                    self.userData = userData
+                    print("Home View : \(userData.userEmail)")
+                    
+                    // Create a mock User and MyData for the preview
+                    let context = PersistenceController.shared.container.viewContext
+                    
+                    // Create and save User
+                    let user = User(context: context)
+                    user.email = userData.userEmail
+                    user.password = userData.userPassword
+                    user.username = userData.userUserName
+                    
+                    // Fetch the data for the current user
+                    timeOffDataList = persistenceController.fetchData(for: user)
+                    
+                }
             }
             .listStyle(PlainListStyle())
             .background(Color.clear)
@@ -111,8 +124,8 @@ struct HomeView: View {
             
         }
         .navigationBarBackButtonHidden(true)
-        
     }
+    
     
     
     private let dateFormatter: DateFormatter = {
@@ -122,45 +135,14 @@ struct HomeView: View {
     }()
     
     private func signOut() {
-        // Reset the isLoggedIn state to false
+        UserSession.clearUserData() // Clear user data from UserDefaults
         isLoggedIn = false
     }
     
     
 }
 
-//#Preview {
-//    HomeView()
-//}
 
 #Preview {
-    // Create a mock User and MyData for the preview
-    let context = PersistenceController.shared.container.viewContext
-    
-    // Create and save User
-    let user = User(context: context)
-    user.email = "abc@email.com"
-    user.password = "abc123"
-    user.username = "ABC"
-    
-    // Create and save MyData
-    let data1 = TimeOff(context: context)
-    data1.id = UUID()
-    data1.timeOffType = TimeOffType.allCases.randomElement()?.rawValue
-    data1.holidayName = "\(user.username!) - TF\(Int.random(in: 10...99))"
-    data1.startDate = Date()
-    data1.endDate = Date().addingTimeInterval(60*60*24)
-    data1.isHalfDay = Bool.random()
-    data1.creationDate = Date().addingTimeInterval(-60*60*24)
-    data1.user = user
-    
-    // Save context to persist the objects
-    do {
-        try context.save()
-    } catch {
-        print("Error saving context: \(error)")
-    }
-    
-    // Return HomeView with the user and a constant isLoggedIn state
-    return HomeView(user: user, isLoggedIn: .constant(true))
+    HomeView()
 }

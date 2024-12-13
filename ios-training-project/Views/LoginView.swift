@@ -2,18 +2,19 @@
 //  LoginView.swift
 //  ios-training-project
 //
-//  Created by Ankit Kishor on 06/12/24.
+//  Modified by Harshad Sawant on 12/12/24.
 //
 
-import SwiftUI
 import SwiftUI
 
 struct LoginView: View {
     
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
+    
+    @Binding var isOnLoginView: Bool
+    
     @State private var email: String = ""
     @State private var password: String = ""
-    @Binding var isLoggedIn: Bool
-    @Binding var currentUser: User?
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     
@@ -72,6 +73,19 @@ struct LoginView: View {
                     
                 }
                 
+                // // Only navigate if user is valid
+                if let user = getUserForEmail(email), isLoggedIn {
+                    NavigationLink(
+                        destination: HomeView(),
+                        isActive: $isOnLoginView,
+                        label: {
+                            EmptyView()
+                        }
+                    )
+                    .isDetailLink(false)
+                    .hidden()
+                }
+                
                 CustomButton(
                     title: "Sign In",
                     action: {
@@ -85,18 +99,6 @@ struct LoginView: View {
                 .font(.system(size: 20))
                 .alert(isPresented: $showAlert) {
                     Alert(title: Text("Login Failed"), message: Text("Invalid email or password."), dismissButton: .default(Text("OK")))
-                }
-                
-                // // Only navigate if user is valid
-                if let user = getUserForEmail(email), isLoggedIn {
-                    NavigationLink(
-                        destination: HomeView(user: user,isLoggedIn: $isLoggedIn),
-                        isActive: $isLoggedIn,
-                        label: {
-                            EmptyView()
-                        }
-                    )
-                    .isDetailLink(false)
                 }
                 
                 
@@ -118,8 +120,11 @@ struct LoginView: View {
             return
         }
         // If user is validated, set currentUser and isLoggedIn to true
-        currentUser = user
+        let userData = UserSession(userEmail: user.email ?? "abc@email.com", userPassword: user.password ?? "abc123", userUserName: user.username ?? "Abc")
+        UserSession.saveToDefaults(userData: userData)
         isLoggedIn = true
+        dismiss()
+        isOnLoginView = false
     }
     
     private func validateUser(email: String, password: String) -> User? {
@@ -136,9 +141,6 @@ struct LoginView: View {
 
 
 #Preview {
-    LoginView(
-        isLoggedIn: .constant(true),
-        currentUser: .constant(PersistenceController.preview.fetchUsers().first)
-    )
-    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    LoginView(isOnLoginView: .constant(true))
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

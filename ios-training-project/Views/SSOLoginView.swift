@@ -9,8 +9,7 @@ import SwiftUI
 
 struct SSOLoginView: View {
     
-    @Binding var isLoggedIn: Bool
-    @Binding var currentUser: User?
+    @Binding var isOnLoginView: Bool
     
     var body: some View {
         NavigationStack {
@@ -39,17 +38,14 @@ struct SSOLoginView: View {
                 VStack(spacing: 15) {
                     
                     NavigationLink(
-                        destination: LoginView(
-                            isLoggedIn: $isLoggedIn,
-                            currentUser: $currentUser
-                        ).navigationBarBackButtonHidden(true),
-                        isActive: $isLoggedIn
+                        destination: LoginView(isOnLoginView: $isOnLoginView).navigationBarBackButtonHidden(true),
+                        isActive: $isOnLoginView
                     ){
-                        EmptyView()
+                        //                        EmptyView()
                         
                         SSOButton(
                             provider: {
-                                isLoggedIn = true
+                                isOnLoginView = true
                             },
                             color: .red,
                             logo: "Salesforcelogo",
@@ -70,9 +66,6 @@ struct SSOLoginView: View {
 }
 
 #Preview {
-    SSOLoginView(
-        isLoggedIn: .constant(true),
-        currentUser: .constant(PersistenceController.preview.fetchUsers().first)
-    )
-    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    SSOLoginView(isOnLoginView: .constant(true))
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
