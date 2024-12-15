@@ -102,6 +102,8 @@ class PersistenceController {
         let context = container.viewContext
         let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
         
+        printSQLiteFilePath()
+        
         do{
             let users = try context.fetch(fetchRequest)
             print("Existing users in Core Data: ") // Debug log to see users
@@ -201,19 +203,31 @@ class PersistenceController {
     func fetchData(for user: User) -> [TimeOff] {
         let context = container.viewContext
         let request: NSFetchRequest<TimeOff> = TimeOff.fetchRequest()
-        
         request.predicate = NSPredicate(format: "user.email == %@", user.email!)
         
         do {
             let dataItems = try context.fetch(request)
             print("Fetched \(dataItems.count) data items for user \(user.email ?? "abc@email.com") .") // Log fetched data
             dataItems.forEach{ timeOff in
-                print("\(timeOff.holidayName!) - Attachments: \(timeOff.attachments!.count)")
+                print("\(timeOff.id?.uuidString) - Attachments: \(timeOff.attachments!.count)")
             }
             return dataItems
         } catch {
             print("Failed to fetch data items: \(error)")
             return []
+        }
+    }
+    
+    //=----------------------------------------------------------------------------------------
+    
+    
+    func printSQLiteFilePath() {
+        // Access the persistent container's store URL
+        let storeURL = container.persistentStoreCoordinator.persistentStores.first?.url
+        if let storeURL = storeURL {
+            print("SQLite file path: \(storeURL.path)")
+        } else {
+            print("SQLite file not found")
         }
     }
     
