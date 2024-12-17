@@ -7,7 +7,7 @@ import SwiftUI
 struct HomeView: View {
     
     @AppStorage("isLoggedIn") private var isLoggedIn = false
-    
+    @State private var isNavigate = false
     @State private var timeOffDataList: [TimeOff] = []
     let persistenceController = PersistenceController.shared
     
@@ -16,26 +16,27 @@ struct HomeView: View {
         
         NavigationStack{
             
-            NavigationLink(
-                destination: FormView().navigationBarBackButtonHidden(true),
-                isActive: $isLoggedIn
-            ){
-                EmptyView()
+            
                 
                 HStack(spacing: 80){
                     
-                    CustomButton(
-                        title: "New Time off",
-                        action: {
-                            isLoggedIn = true
-                        },
-                        backgroundColor: .purple
-                    )
-                    .padding(.vertical)
-                    .frame(maxWidth: .infinity)
-                    
-                    //                    Spacer()
-                    
+                    NavigationLink(
+                        destination: FormView().navigationBarBackButtonHidden(true),
+                        isActive: $isNavigate
+                    ){
+                        EmptyView()
+                        CustomButton(
+                            title: "New Time off",
+                            action: {
+                                isNavigate = true
+                            },
+                            backgroundColor: .purple
+                        )
+                        .padding(.vertical)
+                        .frame(maxWidth: .infinity)
+                        
+                        //                    Spacer()
+                    }
                     CustomButton(
                         title: "Sign Out",
                         action: {
@@ -48,7 +49,7 @@ struct HomeView: View {
                     
                 }
                 
-            }
+            
             
             TableHeaderView()
                 .padding(.vertical,0)
