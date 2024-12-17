@@ -195,6 +195,11 @@ struct FormView: View {
         newFileData.fileUrl = url.absoluteString  // Store URL as a string
         newFileData.fileName = url.lastPathComponent
         newFileData.fileType = UTType(url.absoluteString)?.identifier ?? "Unknown type"
+        newFileData.fileUploadDate = Date()
+        
+        
+        print(newFileData)
+        
         attachments.append(newFileData)
     }
     
@@ -203,9 +208,9 @@ struct FormView: View {
         let context = viewContext
         
         let user = User(context: context)
-        user.email = userData?.userEmail ?? "abc@email.com"
-        user.password = userData?.userPassword ?? "abc123"
-        user.username = userData?.userUserName ?? "Abc"
+        user.email = userData?.userEmail
+        user.password = userData?.userPassword
+        user.username = userData?.userUserName
         
         let newData = TimeOff(context: context)
         newData.id = UUID()
@@ -217,6 +222,9 @@ struct FormView: View {
         newData.creationDate = Date()
         newData.user = user
         newData.addToAttachments(NSSet(array: attachments))
+        
+        
+        print(newData)
         
         // Save to Core Data
         do{

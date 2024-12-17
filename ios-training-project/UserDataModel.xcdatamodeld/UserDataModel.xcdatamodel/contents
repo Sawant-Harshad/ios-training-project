@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="V1">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="24C101" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="V1">
     <entity name="Attachment" representedClassName=".Attachment" syncable="YES" codeGenerationType="class">
         <attribute name="fileName" attributeType="String"/>
         <attribute name="fileType" attributeType="String"/>
-        <attribute name="fileUploadDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fileUploadDate" attributeType="Date" defaultDateTimeInterval="725740200" usesScalarValueType="NO"/>
         <attribute name="fileUrl" attributeType="String"/>
         <relationship name="timeOff" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TimeOff" inverseName="attachments" inverseEntity="TimeOff"/>
     </entity>

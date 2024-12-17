@@ -16,39 +16,37 @@ struct HomeView: View {
         
         NavigationStack{
             
-            
+            HStack(spacing: 80){
                 
-                HStack(spacing: 80){
-                    
-                    NavigationLink(
-                        destination: FormView().navigationBarBackButtonHidden(true),
-                        isActive: $isNavigate
-                    ){
-                        EmptyView()
-                        CustomButton(
-                            title: "New Time off",
-                            action: {
-                                isNavigate = true
-                            },
-                            backgroundColor: .purple
-                        )
-                        .padding(.vertical)
-                        .frame(maxWidth: .infinity)
-                        
-                        //                    Spacer()
-                    }
+                NavigationLink(
+                    destination: FormView().navigationBarBackButtonHidden(true),
+                    isActive: $isNavigate
+                ){
+                    EmptyView()
                     CustomButton(
-                        title: "Sign Out",
+                        title: "New Time off",
                         action: {
-                            signOut()
+                            isNavigate = true
                         },
-                        backgroundColor: .secondary
+                        backgroundColor: .purple
                     )
                     .padding(.vertical)
                     .frame(maxWidth: .infinity)
                     
+                    //                    Spacer()
                 }
+                CustomButton(
+                    title: "Sign Out",
+                    action: {
+                        signOut()
+                    },
+                    backgroundColor: .secondary
+                )
+                .padding(.vertical)
+                .frame(maxWidth: .infinity)
                 
+            }
+            
             
             
             TableHeaderView()
