@@ -10,7 +10,7 @@ import CoreData
 
 struct DummyDetailView: View {
     
-    var timeOffDetail: String
+    var timeOffDetail: TimeOff
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -36,20 +36,20 @@ struct DummyDetailView: View {
                 
                 // Form
                 VStack(spacing: 20) {
-                    InputFormView(text: .constant(timeOffDetail), title: "Request ID", placeholder: "")
+                    InputFormView(text: .constant(timeOffDetail.id?.uuidString ?? "UUID"), title: "Request ID", placeholder: "")
                         .disabled(true)
                     
-//                    InputFormView(text: .constant(timeOffDetail.startDate), title: "Start Date", placeholder: "")
-//                        .disabled(true)
-//
-//                    InputFormView(text: .constant(timeOffDetail.endDate), title: "End Date", placeholder: "")
-//                        .disabled(true)
-//
-//                    InputFormView(text: .constant(timeOffDetail.timeOffType), title: "Type", placeholder: "")
-//                        .disabled(true)
-//
-//                    Toggle("Half Day", isOn: .constant(timeOffDetail.isHalfDay))
-//                        .disabled(true)
+                    InputFormView(text: .constant(formatDate(timeOffDetail.startDate!)), title: "Start Date", placeholder: "")
+                        .disabled(true)
+                    
+                    InputFormView(text: .constant(formatDate(timeOffDetail.endDate!)), title: "End Date", placeholder: "")
+                        .disabled(true)
+                    
+                    InputFormView(text: .constant(timeOffDetail.timeOffType!), title: "Type", placeholder: "")
+                        .disabled(true)
+                    
+                    Toggle("Half Day", isOn: .constant(timeOffDetail.isHalfDay))
+                        .disabled(true)
                 }
                 .padding()
                 
@@ -58,8 +58,34 @@ struct DummyDetailView: View {
             .navigationBarBackButtonHidden(true)
         }
     }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+    
 }
 
 #Preview {
-    DummyDetailView(timeOffDetail: "Time Off Detail")
+    
+    let context = PersistenceController.shared.container.viewContext
+    
+    let user1 = User(context: context)
+    user1.email = "abc@email.com"
+    user1.password = "abc123"
+    user1.username = "ABC"
+    
+    let data1 = TimeOff(context: context)
+    data1.id = UUID()
+    data1.timeOffType = TimeOffType.allCases.randomElement()?.rawValue
+    data1.holidayName = "Leave-01"
+    data1.startDate = Date()
+    data1.endDate = Date()
+    data1.isHalfDay = Bool.random()
+    data1.creationDate = Date()
+    data1.user = user1
+    
+    return DummyDetailView(timeOffDetail: data1)
 }

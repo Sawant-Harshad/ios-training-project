@@ -58,14 +58,17 @@ struct HomeView: View {
                 HStack(alignment: .top){
                     
                     VStack{
-                        NavigationLink(destination: DummyDetailView(timeOffDetail: item.id!.uuidString)){
+                        NavigationLink(
+                            destination: DummyDetailView(timeOffDetail:item)
+                        ){
+                            EmptyView()
+                            
                             Text(item.id!.uuidString)
                                 .padding(.horizontal)
                                 .foregroundColor(Color(#colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)))
                         }
                         .frame(maxWidth: .infinity,alignment: .topLeading)
                     }
-                    //                    .border(.blue)
                     .padding(.vertical,10)
                     
                     VStack{
