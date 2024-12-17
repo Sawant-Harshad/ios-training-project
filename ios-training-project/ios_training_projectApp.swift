@@ -12,6 +12,7 @@ struct ios_training_projectApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                
         }
     }
 }

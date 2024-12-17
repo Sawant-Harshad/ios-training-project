@@ -53,6 +53,28 @@ struct DummyDetailView: View {
                 }
                 .padding()
                 
+                VStack(alignment: .leading) {
+                    if let attachmentsSet = timeOffDetail.attachments {
+                        // Safely cast allObjects to [Attachment] and use it in the List
+                        let attachments = attachmentsSet.allObjects as? [Attachment] ?? []
+                        
+                        if attachments.isEmpty {
+                            Text("No attachments available")
+                                .font(.caption)
+                        } else {
+                            ForEach(attachments) { fileData in
+                                Text(fileData.fileName ?? "No file")
+                                    .font(.caption)
+                            }
+                            
+                        }
+                    } else {
+                        // If attachmentsSet is nil, handle the empty case
+                        Text("No attachments")
+                            .font(.caption)
+                    }
+                }
+                
                 Spacer()
             }
             .navigationBarBackButtonHidden(true)
