@@ -30,10 +30,7 @@ struct HomeView: View {
                         },
                         backgroundColor: .purple
                     )
-                    .padding(.vertical)
-                    .frame(maxWidth: .infinity)
-                    
-                    //                    Spacer()
+
                 }
                 CustomButton(
                     title: "Sign Out",
@@ -42,64 +39,58 @@ struct HomeView: View {
                     },
                     backgroundColor: .secondary
                 )
-                .padding(.vertical)
-                .frame(maxWidth: .infinity)
+
                 
             }
+            .padding()
+            .frame(maxWidth: .infinity)
             
             
             
             TableHeaderView()
-                .padding(.vertical,0)
             
             List($timeOffDataList,id:\.self.id){ $item in
                 
-                HStack(alignment: .top){
-                    
-                    VStack{
+            
                         NavigationLink(
-                            destination: DummyDetailView(timeOffDetail:item)
+                            destination: DetailView(timeOffDetail:item)
                         ){
                             EmptyView()
                             
-                            Text(item.id!.uuidString)
-                                .padding(.horizontal)
-                                .foregroundColor(Color(#colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)))
+                            HStack(spacing: 50){
+                                
+                                Text(item.id?.uuidString ?? "N/A")
+                                            .font(.subheadline)
+                                            .foregroundColor(.blue)
+                                            .lineLimit(1)
+                                            .frame(width: 80)
+                            VStack{
+                                Text(item.startDate!,formatter: dateFormatter)
+                                    .padding(.vertical,2)
+                                Text(item.endDate!,formatter: dateFormatter)
+                                    .padding(.vertical,2)
+                            }
+                            
+                            
+                            VStack(alignment: .leading, spacing: 10) {
+                                           Text(item.timeOffType ?? "N/A")
+                                    
+                                           CheckBoxView(isChecked: $item.isHalfDay)
+                                    .font(.system(size: 12))
+                            }
                         }
-                        .frame(maxWidth: .infinity,alignment: .topLeading)
                     }
-                    .padding(.vertical,10)
-                    
-                    VStack{
-                        Text(item.startDate!,formatter: dateFormatter)
-                            .padding(.vertical,2)
-                        Text(item.endDate!,formatter: dateFormatter)
-                            .padding(.vertical,2)
-                    }
-                    .frame(alignment: .center)
-                    .padding(.vertical,10)
-                    
-                    
-                    VStack(alignment: .leading){
-                        Text(item.timeOffType!)
-                            .padding(.horizontal)
-                        HStack{
-                            CheckBoxView(isChecked: $item.isHalfDay)
-                        }
-                        .padding(.horizontal)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                    .padding(.vertical,10)
-                    
-                }
-                .background(Color.white)
+                .shadow(color: Color.gray.opacity(0.1), radius: 2, x: 0, y: 1)
+//                .background(Color.white)
                 .font(.system(size: 15))
                 .frame(height: 50)
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal,0)
-                .padding(.vertical,12)
+                .padding(.vertical,10)
                 .cornerRadius(10)
+                
             }
+            
             .onAppear {
                 if let userData = UserSession.loadFromDefaults() {
                     //                    self.userData = userData

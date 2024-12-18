@@ -9,9 +9,13 @@ struct TableHeaderView: View {
         HStack {
             HeaderTitle(title: "Time Off Id")
             HeaderTitle(title: "Period")
-            HeaderTitle(title: "Details")
+            HStack{
+                
+                HeaderTitle(title: "Details")
+            }
+           
         }
-        .padding(.horizontal)
+        .padding()
         .background(Color.clear)
     }
 }
@@ -23,9 +27,9 @@ struct HeaderTitle: View{
     
     var body: some View {
         Text("\(title)")
-            .fontWeight(.bold)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical,5)
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity, alignment: .leadingLastTextBaseline)
+//            .padding()
 //            .border(.red)
     }
 }
