@@ -40,7 +40,7 @@ struct DetailView: View {
                 // Form
                 VStack(spacing: 15) {
                     
-              
+                    
                     
                     InputFormView(text: .constant(userData?.userUserName ??  "User name"), title: "Person", placeholder: "")
                         .disabled(true)
@@ -50,7 +50,7 @@ struct DetailView: View {
                     
                     InputFormView(text: .constant(timeOffDetail.timeOffType!), title: "TimeOffType", placeholder: "")
                         .disabled(true)
-                  
+                    
                     
                     InputFormView(text: .constant(timeOffDetail.holidayName!), title: "Description", placeholder: "")
                         .disabled(true)
@@ -82,16 +82,16 @@ struct DetailView: View {
                 
                 
                 
-               
-                    
+                
+                
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Notes & Attachments")
                         .font(.headline)
                         .foregroundColor(.black)
-
+                    
                     if let attachmentsSet = timeOffDetail.attachments {
                         let attachments = attachmentsSet.allObjects as? [Attachment] ?? []
-
+                        
                         if attachments.isEmpty {
                             Text("No attachments available")
                                 .font(.caption)
@@ -125,46 +125,29 @@ struct DetailView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color(UIColor.systemGray6)) 
+                .background(Color(UIColor.systemGray6))
                 .cornerRadius(8)
-
                 
-//                Spacer()
+                
+                //                Spacer()
             }
             .navigationBarBackButtonHidden(true)
+        }
+        .onAppear(){
+            if let userData = UserSession.loadFromDefaults() {
+                self.userData = userData
+            }
         }
     }
     
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.timeStyle = .short
         return formatter.string(from: date)
     }
     
 }
 
-//#Preview {
-//    
-//    let context = PersistenceController.shared.container.viewContext
-//    
-//    let user1 = User(context: context)
-//    user1.email = "abc@email.com"
-//    user1.password = "abc123"
-//    user1.username = "ABC"
-//    
-//    let data1 = TimeOff(context: context)
-//    data1.id = UUID()
-//    data1.timeOffType = TimeOffType.allCases.randomElement()?.rawValue
-//    data1.holidayName = "Leave-01"
-//    data1.startDate = Date()
-//    data1.endDate = Date()
-//    data1.isHalfDay = Bool.random()
-//    data1.creationDate = Date()
-//    data1.user = user1
-//    
-//    return DetailView(timeOffDetail: data1)
-//}
 #Preview {
     let context = PersistenceController.shared.container.viewContext
     

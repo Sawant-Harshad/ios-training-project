@@ -137,11 +137,6 @@ struct FormView: View {
                         .cornerRadius(8)
                     }
                     
-                    //                    if let selectedFile = timeOffRequest.selectedFile {
-                    //                        Text("Selected File: \(selectedFile.lastPathComponent)")
-                    //                            .font(.footnote)
-                    //                            .foregroundColor(.gray)
-                    //                    }
                     
                     ForEach(attachments, id: \.fileUrl) { fileData in
                         Text(fileData.fileName ?? "Unknown file")
