@@ -18,7 +18,7 @@ struct DetailView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 15) {
+            VStack(spacing: 5) {
                 // Header
                 HStack {
                     Image(systemName: "arrow.left")
@@ -27,7 +27,7 @@ struct DetailView: View {
                             dismiss()
                         }
                     
-                    Text("Time Off Request Details")
+                    Text("Time Off Details")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
@@ -38,7 +38,7 @@ struct DetailView: View {
                     .padding(.horizontal)
                 
                 // Form
-                VStack(spacing: 15) {
+                VStack(spacing: 10) {
                     
                     
                     
@@ -55,15 +55,22 @@ struct DetailView: View {
                     InputFormView(text: .constant(timeOffDetail.holidayName!), title: "Description", placeholder: "")
                         .disabled(true)
                     
-                    HStack(spacing:15){
+                    HStack( spacing:30){
                         InputFormView(text: .constant(formatDate(timeOffDetail.startDate!)), title: "Start Date", placeholder: "")
                             .disabled(true)
-                        
+                            
+                                    
+                        Spacer()
                         InputFormView(text: .constant(formatDate(timeOffDetail.endDate!)), title: "End Date", placeholder: "")
                         
                             .disabled(true)
+                            
+                          
                         
                     }
+                    .padding()
+                    .background(Color(UIColor.systemGray6))
+                    .cornerRadius(8)
                     
                     Toggle(isOn:.constant(timeOffDetail.isHalfDay)){
                         Text("Half Day")
@@ -128,9 +135,22 @@ struct DetailView: View {
                 .background(Color(UIColor.systemGray6))
                 .cornerRadius(8)
                 
-                
-                //                Spacer()
+                Spacer()
+                HStack(spacing: 16) {
+                    CustomButton(title: "Cancel", action: {
+                        dismiss()
+                    }, backgroundColor: .purple)
+                    CustomButton(title: "Save & New", action: {}, backgroundColor: .purple)
+                    
+                    CustomButton(title: "Save", action: {
+                    }, backgroundColor: .purple)
+                }
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
+                .padding()
+                                Spacer()
             }
+//            .background(Color.lightcyan)
             .navigationBarBackButtonHidden(true)
         }
         .onAppear(){
