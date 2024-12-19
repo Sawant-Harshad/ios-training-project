@@ -58,14 +58,14 @@ struct DetailView: View {
                     HStack( spacing:30){
                         InputFormView(text: .constant(formatDate(timeOffDetail.startDate!)), title: "Start Date", placeholder: "")
                             .disabled(true)
-                            
-                                    
+                        
+                        
                         Spacer()
                         InputFormView(text: .constant(formatDate(timeOffDetail.endDate!)), title: "End Date", placeholder: "")
                         
                             .disabled(true)
-                            
-                          
+                        
+                        
                         
                     }
                     .padding()
@@ -136,21 +136,21 @@ struct DetailView: View {
                 .cornerRadius(8)
                 
                 Spacer()
-                HStack(spacing: 16) {
-                    CustomButton(title: "Cancel", action: {
-                        dismiss()
-                    }, backgroundColor: .purple)
-                    CustomButton(title: "Save & New", action: {}, backgroundColor: .purple)
-                    
-                    CustomButton(title: "Save", action: {
-                    }, backgroundColor: .purple)
-                }
-                .minimumScaleFactor(0.8)
-                .lineLimit(1)
-                .padding()
-                                Spacer()
+                //                HStack(spacing: 16) {
+                //                    CustomButton(title: "Cancel", action: {
+                //                        dismiss()
+                //                    }, backgroundColor: .purple)
+                //                    CustomButton(title: "Save & New", action: {}, backgroundColor: .purple)
+                //
+                //                    CustomButton(title: "Save", action: {
+                //                    }, backgroundColor: .purple)
+                //                }
+                //                .minimumScaleFactor(0.8)
+                //                .lineLimit(1)
+                //                .padding()
+                //                                Spacer()
             }
-//            .background(Color.lightcyan)
+            //            .background(Color.lightcyan)
             .navigationBarBackButtonHidden(true)
         }
         .onAppear(){
