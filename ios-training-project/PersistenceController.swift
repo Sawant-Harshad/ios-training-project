@@ -115,8 +115,6 @@ class PersistenceController {
             if let user1 = users.first(where: { $0.email == "harshad.sawant@example.com" }) {
                 // If user1 exists, add dummy DataItems
                 print("Found existing \(user1.email!)")
-                //                addDummyDataItems(for: user1)
-                //                save()
                 let dataList = fetchData(for: user1)
                 
             } else {
@@ -158,7 +156,7 @@ class PersistenceController {
         data1.endDate = Date().addingTimeInterval(60*60*24)
         data1.isHalfDay = Bool.random()
         data1.creationDate = Date().addingTimeInterval(-60*60*24)
-        data1.user = user
+        user.addToUserTimeOffList(data1)
         
         print("Data 1: \(data1.id ?? UUID()) - \(data1.holidayName ?? "Holiday Name")")
         
@@ -170,7 +168,7 @@ class PersistenceController {
         data2.endDate = Date().addingTimeInterval(60*60*24)
         data2.isHalfDay = Bool.random()
         data2.creationDate = Date().addingTimeInterval(-60*60*24)
-        data2.user = user
+        user.addToUserTimeOffList(data2)
         
         print("Data 2: \(data2.id ?? UUID()) - \(data2.holidayName ?? "Holiday Name")")
         
@@ -215,6 +213,28 @@ class PersistenceController {
         } catch {
             print("Failed to fetch data items: \(error)")
             return []
+        }
+    }
+    
+    func fetchUser(_ email: String) -> User? {
+        let context = container.viewContext
+        let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "email == %@", email)
+        
+        do {
+            let users = try context.fetch(fetchRequest)
+            
+            if let existingUser = users.first {
+                return existingUser
+            }
+            else{
+                print("Error: User not found !!")
+                return nil
+            }
+            
+        } catch {
+            print("Failed to fetch users: \(error)")
+            return nil
         }
     }
     

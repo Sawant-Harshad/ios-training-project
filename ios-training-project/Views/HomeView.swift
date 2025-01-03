@@ -30,7 +30,7 @@ struct HomeView: View {
                         },
                         backgroundColor: .purple
                     )
-
+                    
                 }
                 CustomButton(
                     title: "Sign Out",
@@ -39,7 +39,7 @@ struct HomeView: View {
                     },
                     backgroundColor: .secondary
                 )
-
+                
                 
             }
             .padding()
@@ -51,37 +51,37 @@ struct HomeView: View {
             
             List($timeOffDataList,id:\.self.id){ $item in
                 
-            
-                        NavigationLink(
-                            destination: DetailView(timeOffDetail:item)
-                        ){
-                            EmptyView()
+                
+                NavigationLink(
+                    destination: DetailView(timeOffDetail:item)
+                ){
+                    EmptyView()
+                    
+                    HStack(spacing: 50){
+                        
+                        Text(item.id?.uuidString ?? "N/A")
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
+                            .lineLimit(1)
+                            .frame(width: 80)
+                        VStack{
+                            Text(item.startDate!,formatter: dateFormatter)
+                                .padding(.vertical,2)
+                            Text(item.endDate!,formatter: dateFormatter)
+                                .padding(.vertical,2)
+                        }
+                        
+                        
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(item.timeOffType ?? "N/A")
                             
-                            HStack(spacing: 50){
-                                
-                                Text(item.id?.uuidString ?? "N/A")
-                                            .font(.subheadline)
-                                            .foregroundColor(.blue)
-                                            .lineLimit(1)
-                                            .frame(width: 80)
-                            VStack{
-                                Text(item.startDate!,formatter: dateFormatter)
-                                    .padding(.vertical,2)
-                                Text(item.endDate!,formatter: dateFormatter)
-                                    .padding(.vertical,2)
-                            }
-                            
-                            
-                            VStack(alignment: .leading, spacing: 10) {
-                                           Text(item.timeOffType ?? "N/A")
-                                    
-                                           CheckBoxView(isChecked: $item.isHalfDay)
-                                    .font(.system(size: 12))
-                            }
+                            CheckBoxView(isChecked: $item.isHalfDay)
+                                .font(.system(size: 12))
                         }
                     }
+                }
                 .shadow(color: Color.gray.opacity(0.1), radius: 2, x: 0, y: 1)
-//                .background(Color.white)
+                //                .background(Color.white)
                 .font(.system(size: 15))
                 .frame(height: 50)
                 .frame(maxWidth: .infinity)
@@ -92,19 +92,10 @@ struct HomeView: View {
             }
             
             .onAppear {
-                if let userData = UserSession.loadFromDefaults() {
-                    //                    self.userData = userData
-                    //                    print("Home View : \(userData.userEmail)")
-                    
+                
+                if let user = persistenceController.fetchUser(UserSession.loadFromDefaults()?.userEmail ?? "abc@email.com"){
                     // Create a mock User and MyData for the preview
                     let context = PersistenceController.shared.container.viewContext
-                    
-                    // Create and User
-                    let user = User(context: context)
-                    user.email = userData.userEmail
-                    user.password = userData.userPassword
-                    user.username = userData.userUserName
-                    
                     
                     // Fetch the data for the current user
                     timeOffDataList = persistenceController.fetchData(for: user)

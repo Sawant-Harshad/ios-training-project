@@ -200,12 +200,8 @@ struct FormView: View {
     
     
     private func saveData(user: UserSession) {
-        let context = viewContext
         
-        let user = User(context: context)
-        user.email = userData?.userEmail
-        user.password = userData?.userPassword
-        user.username = userData?.userUserName
+        let context = viewContext
         
         let newData = TimeOff(context: context)
         newData.id = UUID()
@@ -215,11 +211,15 @@ struct FormView: View {
         newData.endDate = endDate
         newData.isHalfDay = isHalfDay
         newData.creationDate = Date()
-        newData.user = user
         newData.addToAttachments(NSSet(array: attachments))
         
-        
         print(newData)
+        
+        if let currentUser = persistenceController.fetchUser(userData?.userEmail ?? "abc@email.com"){
+            currentUser.addToUserTimeOffList(newData)
+            print("New data added.")
+            print(currentUser)
+        }
         
         // Save to Core Data
         do{
