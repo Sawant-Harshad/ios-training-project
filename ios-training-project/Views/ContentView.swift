@@ -6,12 +6,11 @@ import SwiftUI
 
 struct ContentView: View {
     
+    let persistenceController = PersistenceController.shared
     @AppStorage("isLoggedIn") private var isLoggedIn = false
     @State private var isOnLoginView = false
     
     var body: some View {
-        
-        //        Text("isLoggedIn: \(isLoggedIn ? "true" : "false")")
         
         NavigationStack {
             if isLoggedIn{

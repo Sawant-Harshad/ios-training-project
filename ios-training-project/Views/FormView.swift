@@ -13,6 +13,7 @@ struct FormView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
     let persistenceController = PersistenceController.shared
+    @ObservedObject var viewModel:UserTimeOffViewModel
     
     let timeOffTypes: [String] = TimeOffType.allCases.map{ $0.rawValue }
     
@@ -215,7 +216,7 @@ struct FormView: View {
         
         print(newData)
         
-        if let currentUser = persistenceController.fetchUser(userData?.userEmail ?? "abc@email.com"){
+        if let currentUser = viewModel.fetchUser(userData?.userEmail ?? "abc@email.com"){
             currentUser.addToUserTimeOffList(newData)
             print("New data added.")
             print(currentUser)
@@ -236,5 +237,5 @@ struct FormView: View {
 
 
 #Preview {
-    FormView()
+    FormView(viewModel: UserTimeOffViewModel(context: PersistenceController.preview.viewContext))
 }

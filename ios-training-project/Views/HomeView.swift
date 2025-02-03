@@ -8,18 +8,17 @@ struct HomeView: View {
     
     @AppStorage("isLoggedIn") private var isLoggedIn = false
     @State private var isNavigate = false
+    @StateObject var viewModel = UserTimeOffViewModel(context: PersistenceController.shared.viewContext)
     @State private var timeOffDataList: [TimeOff] = []
-    let persistenceController = PersistenceController.shared
     
     var body: some View {
-        
         
         NavigationStack{
             
             HStack(spacing: 80){
                 
                 NavigationLink(
-                    destination: FormView().navigationBarBackButtonHidden(true),
+                    destination: FormView(viewModel: self.viewModel).navigationBarBackButtonHidden(true),
                     isActive: $isNavigate
                 ){
                     EmptyView()
@@ -93,13 +92,12 @@ struct HomeView: View {
             
             .onAppear {
                 
-                if let user = persistenceController.fetchUser(UserSession.loadFromDefaults()?.userEmail ?? "abc@email.com"){
+                if let user = viewModel.fetchUser(UserSession.loadFromDefaults()?.userEmail ?? "abc@email.com"){
                     // Create a mock User and MyData for the preview
-                    let context = PersistenceController.shared.container.viewContext
+                    //                    let context = PersistenceController.shared.container.viewContext
                     
                     // Fetch the data for the current user
-                    timeOffDataList = persistenceController.fetchData(for: user)
-                    
+                    timeOffDataList = viewModel.fetchData(for: user)
                 }
             }
             .listStyle(PlainListStyle())
@@ -129,5 +127,5 @@ struct HomeView: View {
 
 
 #Preview {
-    HomeView()
+    HomeView(viewModel: UserTimeOffViewModel(context: PersistenceController.preview.viewContext))
 }

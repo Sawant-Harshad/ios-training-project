@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct LoginView: View {
     
     @AppStorage("isLoggedIn") private var isLoggedIn = false
+    @Environment(\.managedObjectContext) private var viewContext
     
     @Binding var isOnLoginView: Bool
     
@@ -129,12 +131,12 @@ struct LoginView: View {
     }
     
     private func validateUser(email: String, password: String) -> User? {
-        let users = persistenceController.fetchUsers()
+        let users = UserTimeOffViewModel(context: viewContext).fetchUsers()
         return users.first { $0.email == email && $0.password == password }
     }
     
     private func getUserForEmail(_ email: String) -> User? {
-        return persistenceController.fetchUsers().first(where: { $0.email == email })
+        return UserTimeOffViewModel(context: viewContext).fetchUser(email)
     }
     
     
