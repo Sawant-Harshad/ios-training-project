@@ -10,6 +10,8 @@ import SwiftUI
 struct SSOLoginView: View {
     
     @Binding var isOnLoginView: Bool
+    @Environment(\.managedObjectContext) private var viewContext
+    @ObservedObject var viewModel:UserTimeOffViewModel
     
     var body: some View {
         NavigationStack {
@@ -38,7 +40,7 @@ struct SSOLoginView: View {
                 VStack(spacing: 15) {
                     
                     NavigationLink(
-                        destination: LoginView(isOnLoginView: $isOnLoginView).navigationBarBackButtonHidden(true),
+                        destination: LoginView(viewModel: self.viewModel, isOnLoginView: $isOnLoginView).navigationBarBackButtonHidden(true),
                         isActive: $isOnLoginView
                     ){
                         //                        EmptyView()
@@ -66,6 +68,7 @@ struct SSOLoginView: View {
 }
 
 #Preview {
-    SSOLoginView(isOnLoginView: .constant(true))
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    let context = PersistenceController.preview.container.viewContext
+    SSOLoginView(isOnLoginView: .constant(true), viewModel: UserTimeOffViewModel(context: context))
+        .environment(\.managedObjectContext, context)
 }

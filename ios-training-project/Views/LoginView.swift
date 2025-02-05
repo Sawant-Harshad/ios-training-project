@@ -12,6 +12,7 @@ struct LoginView: View {
     
     @AppStorage("isLoggedIn") private var isLoggedIn = false
     @Environment(\.managedObjectContext) private var viewContext
+    @ObservedObject var viewModel:UserTimeOffViewModel
     
     @Binding var isOnLoginView: Bool
     
@@ -78,7 +79,7 @@ struct LoginView: View {
                 // // Only navigate if user is valid
                 if let user = getUserForEmail(email), isLoggedIn {
                     NavigationLink(
-                        destination: HomeView(),
+                        destination: HomeView(viewModel: self.viewModel),
                         isActive: $isOnLoginView,
                         label: {
                             EmptyView()
@@ -131,12 +132,12 @@ struct LoginView: View {
     }
     
     private func validateUser(email: String, password: String) -> User? {
-        let users = UserTimeOffViewModel(context: viewContext).fetchUsers()
+        let users = viewModel.fetchUsers()
         return users.first { $0.email == email && $0.password == password }
     }
     
     private func getUserForEmail(_ email: String) -> User? {
-        return UserTimeOffViewModel(context: viewContext).fetchUser(email)
+        return viewModel.fetchUser(email)
     }
     
     
@@ -144,6 +145,7 @@ struct LoginView: View {
 
 
 #Preview {
-    LoginView(isOnLoginView: .constant(true))
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    let context = PersistenceController.preview.container.viewContext
+    LoginView(viewModel: UserTimeOffViewModel(context: context), isOnLoginView: .constant(true))
+        .environment(\.managedObjectContext, context)
 }

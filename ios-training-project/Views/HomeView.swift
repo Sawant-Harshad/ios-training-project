@@ -1,5 +1,8 @@
 //
-//  TimeOffTableView.swift
+//  HomeView.swift
+//  ios-training-project
+//
+//  Modified by Harshad Sawant on 05/02/25.
 //
 
 import SwiftUI
@@ -8,7 +11,7 @@ struct HomeView: View {
     
     @AppStorage("isLoggedIn") private var isLoggedIn = false
     @State private var isNavigate = false
-    @StateObject var viewModel = UserTimeOffViewModel(context: PersistenceController.shared.viewContext)
+    @ObservedObject var viewModel:UserTimeOffViewModel
     @State private var timeOffDataList: [TimeOff] = []
     
     var body: some View {
@@ -43,7 +46,6 @@ struct HomeView: View {
             }
             .padding()
             .frame(maxWidth: .infinity)
-            
             
             
             TableHeaderView()
@@ -93,8 +95,6 @@ struct HomeView: View {
             .onAppear {
                 
                 if let user = viewModel.fetchUser(UserSession.loadFromDefaults()?.userEmail ?? "abc@email.com"){
-                    // Create a mock User and MyData for the preview
-                    //                    let context = PersistenceController.shared.container.viewContext
                     
                     // Fetch the data for the current user
                     timeOffDataList = viewModel.fetchData(for: user)
@@ -127,5 +127,6 @@ struct HomeView: View {
 
 
 #Preview {
-    HomeView(viewModel: UserTimeOffViewModel(context: PersistenceController.preview.viewContext))
+    let context = PersistenceController.preview.container.viewContext
+    HomeView(viewModel: UserTimeOffViewModel(context: context))
 }

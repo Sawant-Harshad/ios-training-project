@@ -90,7 +90,7 @@ class UserTimeOffViewModel: ObservableObject {
             if let user1 = users.first(where: { $0.email == "harshad.sawant@example.com" }) {
                 // If user1 exists, add dummy DataItems
                 print("Found existing \(user1.email!)")
-                let dataList = fetchData(for: user1)
+//                let dataList = fetchData(for: user1)
                 
             } else {
                 // Create new user and add dummy data if it doesn't exist
